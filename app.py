@@ -1,11 +1,16 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 
 @app.route('/hello/', methods=['GET', 'POST'])
-def welcome():
+def welcome_hello():
     return "Hello World!"
+
+
+@app.route('/')
+def welcome():
+    return render_template("index.html")
 
 
 @app.route('/<string:name>/')
