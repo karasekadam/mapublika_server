@@ -1,22 +1,17 @@
 import os
-from flask import request, api
+from flask import request, Blueprint, app
 
-UPLOAD_DIRECTORY = "/./users_data_sets"
+# from app import __name__
+
+file_saver = Blueprint('file_saver', __name__)
+
+UPLOAD_DIRECTORY = "./users_data_sets"
+ALLOWED_EXTENSIONS = {'csv'}
 
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
 
 
-@api.route("/files/<filename>", methods=["POST"])
-def post_file(filename):
-    """Upload a file."""
-
-    if "/" in filename:
-        # Return 400 BAD REQUEST
-        os.abort(400, "no subdirectories allowed")
-
-    with open(os.path.join(UPLOAD_DIRECTORY, filename), "wb") as fp:
-        fp.write(request.data)
-
-    # Return 201 CREATED
-    return "", 201
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
