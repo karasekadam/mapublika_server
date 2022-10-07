@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -20,4 +21,5 @@ def hello(name):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+    df = pd.read_csv("uzemi_ciselniky.csv")
 
