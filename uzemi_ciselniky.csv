@@ -1,5 +1,4 @@
-Obec,,,Obec s pověřeným obecním úřadem,,Obec s rozšířenou působností,,Okres,,NUTS 3 - Kraj,,NUTS 2 - Region soudržnosti,
-kód,název,status,kód,název,kód,název,kód,název,kód,název,kód,název
+Kód-obec,Název-obec,status,kód,název,kód,název,Kód-okres,Název-okres,kód-kraj,Název-kraj,kód,název
 554979,Abertamy,M,41061,Ostrov,4106,Ostrov,CZ0412,Karlovy Vary,CZ041,Karlovarský kraj,CZ04,Severozápad
 531367,Adamov,O,21041,Čáslav,2104,Čáslav,CZ0205,Kutná Hora,CZ020,Středočeský kraj,CZ02,Střední Čechy
 535826,Adamov,O,31021,České Budějovice,3102,České Budějovice,CZ0311,České Budějovice,CZ031,Jihočeský kraj,CZ03,Jihozápad
@@ -4004,7 +4003,7 @@ kód,název,status,kód,název,kód,název,kód,název,kód,název,kód,název
 565458,Prackovice nad Labem,O,42082,Lovosice,4208,Lovosice,CZ0423,Litoměřice,CZ042,Ústecký kraj,CZ04,Severozápad
 594679,Práče,O,62203,Znojmo,6220,Znojmo,CZ0647,Znojmo,CZ064,Jihomoravský kraj,CZ06,Jihovýchod
 558231,Prádlo,O,32071,Nepomuk,3207,Nepomuk,CZ0324,Plzeň-jih,CZ032,Plzeňský kraj,CZ03,Jihozápad
-554782,Praha,H,00000,X-X-X,0000,X-X-X,CZ0100,Praha,CZ010,Hlavní město Praha,CZ01,Praha
+554782,Praha,H,0,X-X-X,0,X-X-X,CZ0100,Praha,CZ010,Hlavní město Praha,CZ01,Praha
 550094,Prachatice,M,31092,Prachatice,3109,Prachatice,CZ0315,Prachatice,CZ031,Jihočeský kraj,CZ03,Jihozápad
 572071,Prachovice,O,53041,Heřmanův Městec,5304,Chrudim,CZ0531,Chrudim,CZ053,Pardubický kraj,CZ05,Severovýchod
 592536,Prakšice,O,72082,Uherský Brod,7208,Uherský Brod,CZ0722,Uherské Hradiště,CZ072,Zlínský kraj,CZ07,Střední Morava
