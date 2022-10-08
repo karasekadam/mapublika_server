@@ -1,14 +1,16 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
+from flask_cors import CORS
 
+import csv_data_processor
 from csv_parser import read_csv, to_json
 from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file
 
 # import csv_data_processor
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/hello/', methods=['GET', 'POST'])
 def welcome_hello():
@@ -20,9 +22,9 @@ def welcome():
     return render_template("index.html")
 
 
-@app.route('/<string:name>/')
-def hello(name):
-    return "Hello " + name
+# @app.route('/<string:name>/')
+# def hello(name):
+#     return "Hello " + name
 
 
 @app.route("/files/<filename>", methods=["POST"])
@@ -57,9 +59,9 @@ def post_file(filename: str):
 
 
 
-# @app.route("/porodnost")
-# def porodnost():
-#     return csv_data_processor.to_json()
+@app.route("/porodnost")
+def porodnost():
+    return csv_data_processor.to_json()
 
 
 if __name__ == '__main__':
