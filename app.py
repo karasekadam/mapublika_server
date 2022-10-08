@@ -94,6 +94,11 @@ def porodnost():
     return csv_data_processor.to_json()
 
 
+@app.route("/otazky/<psc>/")
+def otazky_s_psc():
+    return None
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     #df = pd.read_csv("uzemi_ciselniky.csv")
