@@ -155,7 +155,7 @@ def weighted_average_of_group(values, weights, item):
     return (values * weights).groupby(item).sum() / weights.groupby(item).sum()
 
 
-json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
+json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pocetDeti.json", "w") as outfile:
     json_object = json_lib.dumps(json)
     outfile.write(json_object)

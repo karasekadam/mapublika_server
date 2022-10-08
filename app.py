@@ -50,7 +50,6 @@ def post_file(filename: str):
                              args.get("localization_type"),
                              average=args.get("average")))
 
-
     new_name = name_file(filename, token)
     save_json(json_str, new_name)
 
