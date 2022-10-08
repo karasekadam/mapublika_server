@@ -1,9 +1,14 @@
+import pandas as pd
 import os
-
 from flask import Flask, render_template, request
+<<<<<<< HEAD
 
 from csv_parser import read_csv
+=======
+>>>>>>> a836293a20a7b7198211d3d7c76aed44bbc5ccd0
 from file_saver import UPLOAD_DIRECTORY, allowed_file
+import csv_data_processor
+
 
 app = Flask(__name__)
 
@@ -40,5 +45,11 @@ def post_file(filename):
     return "", 201
 
 
+@app.route("/porodnost")
+def porodnost():
+    return csv_data_processor.to_json()
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+    df = pd.read_csv("uzemi_ciselniky.csv")
