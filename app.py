@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
-from flask_cors import CORS
+# from flask_cors import CORS
 
 import csv_data_processor
 from csv_parser import read_csv, to_json, merge
@@ -12,8 +12,9 @@ from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
 # import csv_data_processor
 
 app = Flask(__name__)
-CORS(app)
 
+
+# CORS(app)
 
 
 @app.route('/hello/', methods=['GET', 'POST'])
@@ -44,15 +45,17 @@ def post_file(filename: str):
         return "no subdirectories or __#__ allowed", 400
     if not allowed_file(filename):
         return "wrong file format, file must be csv", 400
-    file_storage = request.files[filename]
+    new_name = name_file(filename, token)
+    if os.path.exists(os.path.join(UPLOAD_DIRECTORY, new_name)):
+        return "file already exists", 400
 
+    file_storage = request.files[filename]
     json_str: str = read_csv(file_storage,
                              args.get("value_code"),
                              args.get("value_occurrences"),
                              args.get("location_text"),
                              args.get("localization_type"))
 
-    new_name = name_file(filename, token)
     save_json(json_str, new_name)
 
     return "", 201
@@ -80,7 +83,6 @@ def public_datasets():
 
 @app.route("/dataset/get-one/<filename>/", methods=["GET"])
 def get_pub_dataset(filename):
-    merge()
     return get_one_public_dataset(filename)
 
 
@@ -93,3 +95,4 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     df = pd.read_csv("uzemi_ciselniky.csv")
     filenames_of_user()
+    merge()

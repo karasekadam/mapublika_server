@@ -122,7 +122,7 @@ with open("sample_rodinnyStav.json", "w") as outfile:
 
 def merge():
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
-    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding='ISO-8859-1')
+    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';')
     psc.replace(";", ",")
     psc.rename(columns={"kodcobce": "Kod-obec"}, inplace=True)
 
