@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
-# from flask_cors import CORS
+from flask_cors import CORS
 
 import csv_data_processor
 from csv_parser import read_csv, to_json, merge
@@ -12,6 +12,7 @@ from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
 # import csv_data_processor
 
 app = Flask(__name__)
+CORS(app)
 
 
 # CORS(app)
@@ -50,12 +51,13 @@ def post_file(filename: str):
         return "file already exists", 400
 
     file_storage = request.files[filename]
-    json_str: str = read_csv(file_storage,
+    json_str: str = str(read_csv(file_storage,
                              args.get("value_code"),
                              args.get("value_occurrences"),
                              args.get("location_text"),
                              args.get("localization_type"))
 
+    new_name = name_file(filename, token)
     save_json(json_str, new_name)
 
     return "", 201
@@ -89,6 +91,9 @@ def get_pub_dataset(filename):
 # @app.route("/porodnost")
 # def porodnost():
 #     return csv_data_processor.to_json()
+@app.route("/porodnost/")
+def porodnost():
+    return csv_data_processor.to_json()
 
 
 if __name__ == '__main__':
