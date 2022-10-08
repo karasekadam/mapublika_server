@@ -9,6 +9,8 @@ from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
     files_of_user, find_users_file, public_datasets_service, \
     get_one_public_dataset
 
+from kvizos import make_final_jason
+
 import csv_data_processor
 
 app = Flask(__name__)
