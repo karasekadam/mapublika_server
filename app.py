@@ -51,7 +51,11 @@ def post_file(filename: str):
                                  args.get("location_text"),
                                  args.get("localization_type"),
                                  args.get("average")))
-
+    print(type(args.get("average")))
+    print(type(args.get("localization_type")))
+    print(type(args.get("location_text")))
+    print(type(args.get("value_occurrences")))
+    print(type(args.get("value_code")))
     new_name = name_file(filename, token)
     save_json(json_str, new_name)
 

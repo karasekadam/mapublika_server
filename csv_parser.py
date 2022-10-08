@@ -46,7 +46,7 @@ def read_csv(file_storage: FileStorage, value_code,
     #                                  row[value_occur]))
     #
     # df["per_thousand"] = per_thousand
-    if average:
+    if average == True or average == "True":
         return to_json_average(df, value_code,
                                value_occur, localization,
                                localization_type)
