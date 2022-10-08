@@ -3,6 +3,8 @@ from typing import List, Set, Any, Optional
 import pandas as pd
 import json as json_lib
 from flask import request, Blueprint, app
+import numpy as np
+import re
 
 # from app import __name__
 from pandas import DataFrame
@@ -109,24 +111,55 @@ def to_json(df: DataFrame, value_code,
     return json
 
 
+def to_int(value):
+    try:
+        return int(value)
+    except ValueError:
+        number = re.search(r'\d+', value)
+        if not number:
+            return np.nan
+        else:
+            return int(number.group())
+
+
 def to_json_average(df: DataFrame, value_code, value_occur, localization, localization_type):
-    pass# df.loc[(())]
+    #print(df[[value_occur, value_code]])
+    for index, row in df.iterrows():
+        #print(type(row[value_code]))
+        if type(row[value_code]) != str and np.isnan(row[value_code]):
+            #print("skip")
+            continue
+        df.at[index, value_code] = to_int(row[value_code])
+    df.dropna(inplace=True)
+    # print(df)
+    # print(df.loc[df["Kod-obec"] == 500011])
+    average_kraj = weighted_average_of_group(values=df[value_code], weights=df[value_occur], item=df["kod-kraj"])
+    average_okres = weighted_average_of_group(values=df[value_code], weights=df[value_occur], item=df["kod-okres"])
+    average_kraj_json = average_kraj.to_json()
+    average_okres_json = average_okres.to_json()
+    json_data = {"kraj": average_kraj_json, "okres": average_okres_json}
+    # print(json_data)
+    return json_data
 
 
-#print(read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True))
+def weighted_average_of_group(values, weights, item):
+    return (values * weights).groupby(item).sum() / weights.groupby(item).sum()
 
-json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
+
+# read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
+
+json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
 with open("public_pocetDeti.json", "w") as outfile:
-    print(json)
     json_object = json_lib.dumps(json)
-    print(json_object)
     outfile.write(json_object)
 
 json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pohlavi.json", "w") as outfile:
-    json_lib.dump(json, outfile, ensure_ascii=False, indent=4)
+    json_object = json_lib.dumps(json)
+    outfile.write(json_object)
 
 json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("sample_rodinnyStav.json", "w") as outfile:
-    json_lib.dump(json, outfile, ensure_ascii=False, indent=4)
+    json_object = json_lib.dumps(json)
+    outfile.write(json_object)
 
