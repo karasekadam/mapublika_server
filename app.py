@@ -1,14 +1,16 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
+from flask_cors import CORS
 
-from csv_parser import read_csv
-from file_saver import UPLOAD_DIRECTORY, allowed_file
 import csv_data_processor
+from csv_parser import read_csv, to_json
+from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file
 
+# import csv_data_processor
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/hello/', methods=['GET', 'POST'])
 def welcome_hello():
@@ -20,26 +22,41 @@ def welcome():
     return render_template("index.html")
 
 
-@app.route('/<string:name>/')
-def hello(name):
-    return "Hello " + name
+# @app.route('/<string:name>/')
+# def hello(name):
+#     return "Hello " + name
 
 
 @app.route("/files/<filename>", methods=["POST"])
-def post_file(filename):
-    """Upload a file."""
+def post_file(filename: str):
+    token = request.headers.get("Authorization").split(" ")[1]
+
+    args = request.form
+    print(args.get("value_code"))
+
     if filename not in request.files:
         return "cannot extract file from request", 400
-    if "/" in filename:
-        return "no subdirectories allowed", 400
+    if "/" in filename and "__#__" not in filename:
+        return "no subdirectories or __#__ allowed", 400
     if not allowed_file(filename):
         return "wrong file format, file must be csv", 400
     file_storage = request.files[filename]
 
-    read_csv(file_storage, 'pohlavi_cis', 'hodnota', 'uzemi_txt', 'uzemi_kod')
-    file_storage.save(os.path.join(UPLOAD_DIRECTORY, filename))
+    json_str: str = read_csv(file_storage,
+                             args.get("value_code"),
+                             args.get("value_occurrences"),
+                             args.get("location_text"),
+                             args.get("localization_type"))
+
+    new_name = name_file(filename, token)
+    save_json(json_str, new_name)
 
     return "", 201
+
+# @app.route("/files/<filename>", methods=["GET"])
+# def filenames_of_user():
+
+
 
 
 @app.route("/porodnost")
