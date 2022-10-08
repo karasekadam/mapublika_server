@@ -109,7 +109,8 @@ def to_json(df: DataFrame, value_code,
 
 def merge():
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
-    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding='utf-8')
+    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding='ISO-8859-1')
+    psc.replace(";", ",")
     psc.rename(columns={"kodcobce": "Kod-obec"}, inplace=True)
 
     new_file = pd.merge(data, psc, on="Kod-obec")

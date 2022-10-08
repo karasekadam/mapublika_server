@@ -37,7 +37,7 @@ def post_file(filename: str):
 
     if filename not in request.files:
         return "cannot extract file from request", 400
-    if "/" in filename and "__#__" not in filename:
+    if "/" in filename or "__#__" in filename:
         return "no subdirectories or __#__ allowed", 400
     if not allowed_file(filename):
         return "wrong file format, file must be csv", 400
@@ -77,7 +77,7 @@ def public_datasets():
 
 @app.route("/dataset/get-one/<filename>/", methods=["GET"])
 def get_pub_dataset(filename):
-    #merge()
+    merge()
     return get_one_public_dataset(filename)
 
 
