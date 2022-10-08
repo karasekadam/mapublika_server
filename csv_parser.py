@@ -176,17 +176,36 @@ def weighted_average_of_group(values, weights, item):
 #     loaded = json_lib.loads(string_json_file)
 
 
-def merge():
+def merge(psc_str):
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
 
     psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding="iso-8859-1")
     # psc.replace(";", ",")
-    psc.rename(columns={"kodobce": "Kod-obec"}, inplace=True)
-    print(psc["Kod-obec"])
+    #print(psc["kodobce"])
+    #psc.rename(columns={"kodobce": "Kod-obec"}, inplace=True)
 
-    new_file = pd.merge(data, psc, on="Kod-obec", how="inner")
-    psc_csv = new_file.to_csv()
+    x = psc.loc[psc["psc"] == psc_str]
+    #print(x["kodobce"])
+    kodobce = x.iloc[0]["kodobce"]
+    #print(data["Kod-obec"])
 
-    text_file = open("psc.csv", "x")
-    text_file.write(psc_csv)
-    text_file.close()
+
+    mrdka = data.loc[data["Kod-obec"] == kodobce]
+    print(mrdka["kod-okres"])
+    print(mrdka["kod-kraj"])
+    return mrdka["kod-okres"], mrdka["kod-kraj"]
+
+
+    #return x["kodokresu"], x["kodkraj"]
+
+
+
+
+    #print(psc["Kod-obec"])
+
+    # new_file = pd.merge(data, psc, on="Kod-obec")
+    # psc_csv = new_file.to_csv()
+    #
+    # text_file = open("psc.csv", "x")
+    # text_file.write(psc_csv)
+    # text_file.close()

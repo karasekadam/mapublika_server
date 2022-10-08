@@ -81,6 +81,7 @@ def specific_datasets(file_name):
 
 @app.route("/dataset/public/", methods=["GET"])
 def public_datasets():
+    print(merge(79811)[0])
     return public_datasets_service()
 
 
