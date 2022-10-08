@@ -48,11 +48,7 @@ def read_csv(file_storage: FileStorage, value_code,
     #                                  row[value_occur]))
     #
     # df["per_thousand"] = per_thousand
-<<<<<<< HEAD
-    if average == "True":
-=======
     if average == True or average == "True":
->>>>>>> 36cd04fdde93d71ce0c63b473786ef50f9161cdb
         return to_json_average(df, value_code,
                                value_occur, localization,
                                localization_type)
@@ -174,11 +170,8 @@ with open("public_vytah.json", "w") as outfile:
 def merge(psc_str):
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
 
-<<<<<<< HEAD
-
-json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
-#print(json)
-=======
+    json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
+    #print(json)
     psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding="iso-8859-1")
 
     x = psc.loc[psc["psc"] == psc_str]
@@ -189,7 +182,6 @@ json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod
     print(mrdka["kod-kraj"])
     return mrdka["kod-okres"], mrdka["kod-kraj"]
 
->>>>>>> 36cd04fdde93d71ce0c63b473786ef50f9161cdb
 """
 with open("public_pohlavi.json", "w") as outfile:
     json_lib.dump(json, outfile)
