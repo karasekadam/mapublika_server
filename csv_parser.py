@@ -19,10 +19,10 @@ def read_csv(file_storage: FileStorage, value_code,
              localization_type):
     df: Optional[DataFrame] = pd.read_csv(file_storage, sep=',')
     to_stay: List[str] = [value_code, value_occur, localization,
-                          localization_type, "uzemi_kod"]
+                          localization_type]
 
     df.drop(df.columns.difference(to_stay), axis=1, inplace=True)
-    df = get_areas_by_id(localization_type, df)
+    df = get_areas_by_id(localization_type, localization, df)
     print(df)
 
     # per_thousand = []
@@ -40,24 +40,20 @@ def read_csv(file_storage: FileStorage, value_code,
     #
     # df["per_thousand"] = per_thousand
 
-
-
     return str(to_json(df, value_code,
                        value_occur, localization,
                        localization_type))
 
 
-def get_areas_by_id(location_type: str, data: DataFrame):
-    #data.rename()
-    data.rename(columns={"uzemi_kod": location_type}, inplace=True)
-    #print(data)
+def get_areas_by_id(location_type: str, localization, data: DataFrame):
+    data.rename(columns={localization: location_type}, inplace=True)
     ciselnik_df = pd.read_csv("uzemi_ciselniky.csv")
     ciselnik_df = ciselnik_df.dropna(how="all")
     ciselnik_df.drop(
-        ciselnik_df.columns.difference(["Kod-obec", "kod-kraj", "kod-okres"]),
+        ciselnik_df.columns.difference(["Kod-obec", "kod-kraj",
+                                        "kod-okres", "Nazev-obec",
+                                        "Nazev-okres", "Nazev-kraj"]),
         axis=1, inplace=True)
-    print(ciselnik_df)
-    print(data)
 
     return pd.merge(data, ciselnik_df, on=location_type)
 
@@ -81,26 +77,30 @@ def to_json(df: DataFrame, value_code,
     for kraj_hodnota in kraje:
         kraj = kraj_hodnota[0]
         kategorie = kraj_hodnota[1]
-        celkovy_pocet = grouped_by_kraj_celkem.loc[kraj, value_occur]
+        celkovy_pocet = grouped_by_kraj_celkem.loc[kraj, value_occur] / 2
         koeficient = 1000 / celkovy_pocet
         pocet_v_kategorii = grouped_by_kraj.loc[kraj_hodnota, value_occur]
         if kraj in json["kraje"]:
-            json["kraje"][kraj][kategorie] = str(int(pocet_v_kategorii * koeficient))
+            json["kraje"][kraj][kategorie] = str(
+                int(pocet_v_kategorii * koeficient))
         else:
             json["kraje"][kraj] = {}
-            json["kraje"][kraj][kategorie] = str(int(pocet_v_kategorii * koeficient))
+            json["kraje"][kraj][kategorie] = str(
+                int(pocet_v_kategorii * koeficient))
 
     okresy = grouped_by_okres.index.values
     for okres_hodnota in okresy:
         okres = okres_hodnota[0]
         kategorie = okres_hodnota[1]
-        celkovy_pocet = grouped_by_okres_celkem.loc[okres, value_occur]
+        celkovy_pocet = grouped_by_okres_celkem.loc[okres, value_occur] / 2
         koeficient = 1000 / celkovy_pocet
         pocet_v_kategorii = grouped_by_okres.loc[okres_hodnota, value_occur]
         if okres in json["okresy"]:
-            json["okresy"][okres][kategorie] = str(int(pocet_v_kategorii * koeficient))
+            json["okresy"][okres][kategorie] = str(
+                int(pocet_v_kategorii * koeficient))
         else:
             json["okresy"][okres] = {}
-            json["okresy"][okres][kategorie] = str(int(pocet_v_kategorii * koeficient))
+            json["okresy"][okres][kategorie] = str(
+                int(pocet_v_kategorii * koeficient))
 
     return json
