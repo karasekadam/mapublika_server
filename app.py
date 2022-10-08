@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
-#from flask_cors import CORS
+from flask_cors import CORS
 
 import csv_data_processor
 from csv_parser import read_csv, to_json, merge
