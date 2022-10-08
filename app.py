@@ -6,12 +6,13 @@ from flask_cors import CORS
 import csv_data_processor
 from csv_parser import read_csv, to_json
 from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
-    files_of_user, find_users_file
+    files_of_user, find_users_file, public_datasets_service
 
 # import csv_data_processor
 
 app = Flask(__name__)
 CORS(app)
+
 
 
 @app.route('/hello/', methods=['GET', 'POST'])
@@ -29,7 +30,7 @@ def welcome():
 #     return "Hello " + name
 
 
-@app.route("/files/<filename>", methods=["POST"])
+@app.route("/files/<filename>/", methods=["POST"])
 def post_file(filename: str):
     token = request.headers.get("Authorization").split(" ")[1]
 
@@ -56,14 +57,14 @@ def post_file(filename: str):
     return "", 201
 
 
-@app.route("/user-datasets", methods=["GET"])
+@app.route("/user-datasets/", methods=["GET"])
 def filenames_of_user():
     token = request.headers.get("Authorization").split(" ")[1]
     return files_of_user(token)
 
 
-@app.route("/dataset/<file_name>", methods=["GET"])
-def specific_file(file_name):
+@app.route("/dataset/<file_name>/", methods=["GET"])
+def specific_datasets(file_name):
     token = request.headers.get("Authorization").split(" ")[1]
     result = find_users_file(token, file_name)
     if result is None:
@@ -71,9 +72,14 @@ def specific_file(file_name):
     return result
 
 
-@app.route("/porodnost")
-def porodnost():
-    return csv_data_processor.to_json()
+@app.route("/dataset/public/", methods=["GET"])
+def public_datasets():
+    return public_datasets_service()
+
+
+# @app.route("/porodnost")
+# def porodnost():
+#     return csv_data_processor.to_json()
 
 
 if __name__ == '__main__':
