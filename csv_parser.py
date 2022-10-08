@@ -1,3 +1,4 @@
+import os
 from typing import List, Set, Any, Optional
 
 import pandas as pd
@@ -31,7 +32,6 @@ def read_csv(file_storage: FileStorage, value_code,
     df = get_areas_by_id(localization_type, localization, df)
     # print(df)
 
-
     # per_thousand = []
     #
     # abs_values = df.where(df[value_code].isnull())
@@ -48,12 +48,12 @@ def read_csv(file_storage: FileStorage, value_code,
     # df["per_thousand"] = per_thousand
     if average:
         return to_json_average(df, value_code,
-                       value_occur, localization,
-                       localization_type)
+                               value_occur, localization,
+                               localization_type)
     else:
         return to_json(df, value_code,
-                           value_occur, localization,
-                           localization_type)
+                       value_occur, localization,
+                       localization_type)
 
 
 def get_areas_by_id(location_type: str, localization, data: DataFrame):
@@ -128,6 +128,7 @@ def to_int(value):
             return int(number.group())
 
 
+
 def to_json_average(df: DataFrame, value_code, value_occur, localization, localization_type):
     for index, row in df.iterrows():
         if type(row[value_code]) != str and np.isnan(row[value_code]):
@@ -163,16 +164,26 @@ json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod
 with open("public_pocetDetiAverage.json", "w") as outfile:
     json_object = json_lib.dumps(json)
     outfile.write(json_object)
+
+def merge():
+    data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
+
 """
 json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pohlavi.json", "w") as outfile:
     json_lib.dump(json, outfile)
 
-json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
-with open("sample_rodinnyStav.json", "w") as outfile:
-    json_object = json_lib.dumps(json)
-    outfile.write(json_object)
+    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding="iso-8859-1")
+    # psc.replace(";", ",")
+    psc.rename(columns={"kodobce": "Kod-obec"}, inplace=True)
+    print(psc["Kod-obec"])
 
+    new_file = pd.merge(data, psc, on="Kod-obec", how="inner")
+    psc_csv = new_file.to_csv()
+
+    text_file = open("psc.csv", "x")
+    text_file.write(psc_csv)
+    text_file.close()
 with open("public_pohlavi.json") as json_file:
     string_json_file = json_file.read()
     loaded = json_lib.loads(string_json_file)
