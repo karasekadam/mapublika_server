@@ -37,13 +37,11 @@ def post_file(filename: str):
     args = request.form
     print(args.get("value_code"))
 
-    if filename not in request.files:
-        return "cannot extract file from request", 400
-    if "/" in filename and "__#__" not in filename:
+    if "/" in filename or "__#__" in filename:
         return "no subdirectories or __#__ allowed", 400
     if not allowed_file(filename):
         return "wrong file format, file must be csv", 400
-    file_storage = request.files[filename]
+    file_storage = request.file
 
     json_str: str = read_csv(file_storage,
                              args.get("value_code"),
@@ -55,6 +53,7 @@ def post_file(filename: str):
     save_json(json_str, new_name)
 
     return "", 201
+
 
 
 @app.route("/user-datasets/", methods=["GET"])
@@ -77,9 +76,9 @@ def public_datasets():
     return public_datasets_service()
 
 
-# @app.route("/porodnost")
-# def porodnost():
-#     return csv_data_processor.to_json()
+@app.route("/porodnost/")
+def porodnost():
+    return csv_data_processor.to_json()
 
 
 if __name__ == '__main__':
