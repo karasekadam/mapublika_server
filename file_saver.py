@@ -17,6 +17,9 @@ PUB_DATASETS_DIRECTORY = "./public_datasets"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
 
+if not os.path.exists(PUB_DATASETS_DIRECTORY):
+    os.makedirs(PUB_DATASETS_DIRECTORY)
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -33,7 +36,7 @@ def save_json(json_str: str, filename: str):
 
 def name_file(filename: str, token: str):
     name = filename.split(".")[0]
-    return token + USER_SEPARATOR + filename + ".json"
+    return token + USER_SEPARATOR + name + ".json"
 
 
 def files_of_user(token: str):
@@ -68,3 +71,11 @@ def public_datasets_service():
         if len(ds_split) == 2:
             datasets.append(ds_split[1].split(".")[0])
     return datasets
+
+
+def get_one_public_dataset(name):
+    for ds in listdir(PUB_DATASETS_DIRECTORY):
+        ds_split = ds.split(USER_SEPARATOR)[1].split(".")[0]
+        if name == ds_split:
+            with open(os.path.join(PUB_DATASETS_DIRECTORY, ds), "r") as f:
+                return f.read()
