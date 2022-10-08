@@ -41,19 +41,19 @@ def post_file(filename: str):
         return "no subdirectories or __#__ allowed", 400
     if not allowed_file(filename):
         return "wrong file format, file must be csv", 400
-    file_storage = request.file
+    file_storage = request.files["file"]
 
     json_str: str = read_csv(file_storage,
                              args.get("value_code"),
                              args.get("value_occurrences"),
                              args.get("location_text"),
-                             args.get("localization_type"))
+                             args.get("localization_type"),
+                             average=args.get("average"))
 
     new_name = name_file(filename, token)
     save_json(json_str, new_name)
 
     return "", 201
-
 
 
 @app.route("/user-datasets/", methods=["GET"])
