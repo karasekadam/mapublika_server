@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
-from flask_cors import CORS
+#from flask_cors import CORS
 
 import csv_data_processor
 from csv_parser import read_csv, to_json, merge
@@ -12,7 +12,7 @@ from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
 # import csv_data_processor
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 
 
 # CORS(app)
@@ -52,10 +52,11 @@ def post_file(filename: str):
 
     file_storage = request.files[filename]
     json_str: str = str(read_csv(file_storage,
-                             args.get("value_code"),
-                             args.get("value_occurrences"),
-                             args.get("location_text"),
-                             args.get("localization_type"))
+                                 args.get("value_code"),
+                                 args.get("value_occurrences"),
+                                 args.get("location_text"),
+                                 args.get("localization_type"),
+                                 args.get("average")))
 
     new_name = name_file(filename, token)
     save_json(json_str, new_name)
@@ -80,6 +81,7 @@ def specific_datasets(file_name):
 
 @app.route("/dataset/public/", methods=["GET"])
 def public_datasets():
+    merge()
     return public_datasets_service()
 
 
@@ -98,6 +100,5 @@ def porodnost():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-    df = pd.read_csv("uzemi_ciselniky.csv")
-    filenames_of_user()
-    merge()
+    #df = pd.read_csv("uzemi_ciselniky.csv")
+    #filenames_of_user()

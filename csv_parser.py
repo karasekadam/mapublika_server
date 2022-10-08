@@ -20,7 +20,7 @@ file_saver = Blueprint('file_saver', __name__)
 # typ_uzemni jednotky ,
 def read_csv(file_storage: FileStorage, value_code,
              value_occur, localization,
-             localization_type):
+             localization_type, average):
     df: Optional[DataFrame] = pd.read_csv(file_storage, sep=',')
     to_stay: List[str] = [value_code, value_occur, localization,
                           localization_type]
@@ -31,7 +31,6 @@ def read_csv(file_storage: FileStorage, value_code,
     # print(df)
     df = get_areas_by_id(localization_type, localization, df)
     print(df)
-
 
     # per_thousand = []
     #
@@ -49,12 +48,12 @@ def read_csv(file_storage: FileStorage, value_code,
     # df["per_thousand"] = per_thousand
     if average:
         return to_json_average(df, value_code,
-                       value_occur, localization,
-                       localization_type)
+                               value_occur, localization,
+                               localization_type)
     else:
         return to_json(df, value_code,
-                           value_occur, localization,
-                           localization_type)
+                       value_occur, localization,
+                       localization_type)
 
 
 def get_areas_by_id(location_type: str, localization, data: DataFrame):
@@ -129,19 +128,24 @@ def to_int(value):
             return int(number.group())
 
 
-def to_json_average(df: DataFrame, value_code, value_occur, localization, localization_type):
-    #print(df[[value_occur, value_code]])
+def to_json_average(df: DataFrame, value_code, value_occur, localization,
+                    localization_type):
+    # print(df[[value_occur, value_code]])
     for index, row in df.iterrows():
-        #print(type(row[value_code]))
+        # print(type(row[value_code]))
         if type(row[value_code]) != str and np.isnan(row[value_code]):
-            #print("skip")
+            # print("skip")
             continue
         df.at[index, value_code] = to_int(row[value_code])
     df.dropna(inplace=True)
     # print(df)
     # print(df.loc[df["Kod-obec"] == 500011])
-    average_kraj = weighted_average_of_group(values=df[value_code], weights=df[value_occur], item=df["kod-kraj"])
-    average_okres = weighted_average_of_group(values=df[value_code], weights=df[value_occur], item=df["kod-okres"])
+    average_kraj = weighted_average_of_group(values=df[value_code],
+                                             weights=df[value_occur],
+                                             item=df["kod-kraj"])
+    average_okres = weighted_average_of_group(values=df[value_code],
+                                              weights=df[value_occur],
+                                              item=df["kod-okres"])
     average_kraj_json = average_kraj.to_json()
     average_okres_json = average_okres.to_json()
     json_data = {"kraj": average_kraj_json, "okres": average_okres_json}
@@ -153,36 +157,36 @@ def weighted_average_of_group(values, weights, item):
     return (values * weights).groupby(item).sum() / weights.groupby(item).sum()
 
 
-json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
-with open("public_pocetDeti.json", "w") as outfile:
-    json_object = json_lib.dumps(json)
-    outfile.write(json_object)
-
-json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
-with open("public_pohlavi.json", "w") as outfile:
-    json_lib.dump(json, outfile)
-
-json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
-with open("sample_rodinnyStav.json", "w") as outfile:
-    json_object = json_lib.dumps(json)
-    outfile.write(json_object)
-
-with open("public_pohlavi.json") as json_file:
-    string_json_file = json_file.read()
-    loaded = json_lib.loads(string_json_file)
+# json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
+# with open("public_pocetDeti.json", "w") as outfile:
+#     json_object = json_lib.dumps(json)
+#     outfile.write(json_object)
+#
+# json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
+# with open("public_pohlavi.json", "w") as outfile:
+#     json_lib.dump(json, outfile)
+#
+# json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
+# with open("sample_rodinnyStav.json", "w") as outfile:
+#     json_object = json_lib.dumps(json)
+#     outfile.write(json_object)
+#
+# with open("public_pohlavi.json") as json_file:
+#     string_json_file = json_file.read()
+#     loaded = json_lib.loads(string_json_file)
 
 
 def merge():
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
-    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';')
-    psc.replace(";", ",")
-    psc.rename(columns={"kodcobce": "Kod-obec"}, inplace=True)
 
-    new_file = pd.merge(data, psc, on="Kod-obec")
+    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding="iso-8859-1")
+    # psc.replace(";", ",")
+    psc.rename(columns={"kodobce": "Kod-obec"}, inplace=True)
+    print(psc["Kod-obec"])
+
+    new_file = pd.merge(data, psc, on="Kod-obec", how="inner")
     psc_csv = new_file.to_csv()
 
     text_file = open("psc.csv", "x")
     text_file.write(psc_csv)
     text_file.close()
-
-
