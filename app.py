@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, request
 
+from csv_parser import read_csv
 from file_saver import UPLOAD_DIRECTORY, allowed_file
 
 app = Flask(__name__)
@@ -33,6 +34,7 @@ def post_file(filename):
         return "wrong file format, file must be csv", 400
     file_storage = request.files[filename]
 
+    read_csv(file_storage, 'pohlavi_cis', 'hodnota', 'uzemi_txt', 'uzemi_kod')
     file_storage.save(os.path.join(UPLOAD_DIRECTORY, filename))
 
     return "", 201
