@@ -128,7 +128,6 @@ def to_int(value):
             return int(number.group())
 
 
-
 def to_json_average(df: DataFrame, value_code, value_occur, localization, localization_type):
     for index, row in df.iterrows():
         if type(row[value_code]) != str and np.isnan(row[value_code]):
@@ -164,6 +163,7 @@ json = read_csv("sldb2021_vira.csv", "vira_txt", "hodnota", "uzemi_kod", "Kod-ob
 with open("public_vira.json", "w") as outfile:
     json_object = json_lib.dumps(json)
     outfile.write(json_object)
+
 
 def merge():
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
