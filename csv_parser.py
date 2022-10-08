@@ -1,3 +1,4 @@
+import os
 from typing import List, Set, Any, Optional
 
 import pandas as pd
@@ -104,3 +105,18 @@ def to_json(df: DataFrame, value_code,
                 int(pocet_v_kategorii * koeficient))
 
     return json
+
+
+def merge():
+    data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
+    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding='utf-8')
+    psc.rename(columns={"kodcobce": "Kod-obec"}, inplace=True)
+
+    new_file = pd.merge(data, psc, on="Kod-obec")
+    psc_csv = new_file.to_csv()
+
+    text_file = open("psc.csv", "x")
+    text_file.write(psc_csv)
+    text_file.close()
+
+
