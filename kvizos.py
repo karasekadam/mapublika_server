@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 
 
 def get_average(json_file):
@@ -35,11 +36,9 @@ def rozdil_prumeru(json_file_org, kod_uzemi):
     final = get_average(json_file_org)
     for hodnota, pocet in options_uzemi.items():
         final[uzemi][hodnota] = int(pocet) - int(final[uzemi][hodnota])
-    
     return final[uzemi]
 
 def make_final_jason(json_file, kod_uzemi):
-
     final = generuj_otazky_prumer(json_file, kod_uzemi)
     return final
 
@@ -50,6 +49,13 @@ def generuj_otazky_prumer(json_file, kod_uzemi):
     for option, value in rozdily.items():
         question = q_start + " a možnosti " + option + " ?"
         answer = ("Ano" if (value > 0) else "Ne")
+        final_dict[question] = answer
+
+    q_start = "Je váš " + ("kraj" if len(kod_uzemi) == 5 else "okres") + " podprůměrný v hodnotě " + (json_file[9:-5])
+    rozdily = rozdil_prumeru(json_file, kod_uzemi)
+    for option, value in rozdily.items():
+        question = q_start + " a možnosti " + option + " ?"
+        answer = ("Ano" if (value < 0) else "Ne")
         final_dict[question] = answer
     return final_dict
 
@@ -96,11 +102,19 @@ def fill_empty_dict(cast, hodnoty_dic):
     for key, max_value in template.items():
         template[key] = [cast, max_value]
     return template
-"""
 
+""" 
 
-#def run_datasets():
-#    #TODO
+def run_datasets(kod_okres, kod_kraj):
+    path = "public_datasets"
+    dir_list = os.listdir(path)
+    final_json = {}
+    for dataset in dir_list:
+        final_json.update(make_final_jason(path + "/" + dataset, kod_okres))
+        final_json.update(make_final_jason(path + "/" + dataset, kod_kraj))
+    return final_json
+   
+
 
 
 
@@ -109,7 +123,7 @@ def fill_empty_dict(cast, hodnoty_dic):
 
 
 if __name__ == '__main__':
-    get_average("public_pocetDeti.json")
-    make_final_jason("public_pocetDeti.json", "CZ0806")
+    run_datasets("CZ0806", "CZ032")
+    #make_final_jason("public_pocetDeti.json", "CZ0806")
 
     
