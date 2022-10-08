@@ -1,6 +1,7 @@
 from typing import List, Set, Any, Optional
 
 import pandas as pd
+import json as json_lib
 from flask import request, Blueprint, app
 
 # from app import __name__
@@ -16,7 +17,7 @@ file_saver = Blueprint('file_saver', __name__)
 # typ_uzemni jednotky ,
 def read_csv(file_storage: FileStorage, value_code,
              value_occur, localization,
-             localization_type):
+             localization_type, average):
     df: Optional[DataFrame] = pd.read_csv(file_storage, sep=',')
     to_stay: List[str] = [value_code, value_occur, localization,
                           localization_type, "uzemi_kod"]
@@ -39,10 +40,14 @@ def read_csv(file_storage: FileStorage, value_code,
     #                                  row[value_occur]))
     #
     # df["per_thousand"] = per_thousand
-
-    return str(to_json(df, value_code,
+    if average:
+        return str(to_json(df, value_code,
                        value_occur, localization,
                        localization_type))
+    else:
+        return str(to_json_average(df, value_code,
+                           value_occur, localization,
+                           localization_type))
 
 
 def get_areas_by_id(location_type: str, data: DataFrame):
@@ -104,14 +109,20 @@ def to_json(df: DataFrame, value_code,
     return json
 
 
-json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec")
+def to_json_average(df: DataFrame, value_code, value_occur, localization, localization_type):
+    for column in df:
+        print(column)
+
+
+json = read_csv("sldb2021_pocetDeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pocetDeti.json", "w") as outfile:
-    outfile.write(json)
+    #outfile.write(json)
+    json_lib.dump(json, outfile, ensure_ascii=False, indent=4)
 
-json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec")
+json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pohlavi.json", "w") as outfile:
-    outfile.write(json)
+    json_lib.dump(json, outfile, ensure_ascii=False, indent=4)
 
-json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec")
+json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("sample_rodinnyStav.json", "w") as outfile:
-    outfile.write(json)
+    json_lib.dump(json, outfile, ensure_ascii=False, indent=4)
