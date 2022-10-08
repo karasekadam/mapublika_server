@@ -9,13 +9,10 @@ from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
     files_of_user, find_users_file, public_datasets_service, \
     get_one_public_dataset
 
-# import csv_data_processor
+import csv_data_processor
 
 app = Flask(__name__)
-#CORS(app)
-
-
-# CORS(app)
+CORS(app)
 
 
 @app.route('/hello/', methods=['GET', 'POST'])
