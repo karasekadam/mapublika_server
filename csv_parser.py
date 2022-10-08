@@ -79,7 +79,7 @@ def to_json(df: DataFrame, value_code,
     for kraj_hodnota in kraje:
         kraj = kraj_hodnota[0]
         kategorie = kraj_hodnota[1]
-        celkovy_pocet = grouped_by_kraj_celkem.loc[kraj, value_occur]
+        celkovy_pocet = grouped_by_kraj_celkem.loc[kraj, value_occur] / 2
         koeficient = 1000 / celkovy_pocet
         pocet_v_kategorii = grouped_by_kraj.loc[kraj_hodnota, value_occur]
         if kraj in json["kraje"]:
@@ -92,7 +92,7 @@ def to_json(df: DataFrame, value_code,
     for okres_hodnota in okresy:
         okres = okres_hodnota[0]
         kategorie = okres_hodnota[1]
-        celkovy_pocet = grouped_by_okres_celkem.loc[okres, value_occur]
+        celkovy_pocet = grouped_by_okres_celkem.loc[okres, value_occur] / 2
         koeficient = 1000 / celkovy_pocet
         pocet_v_kategorii = grouped_by_okres.loc[okres_hodnota, value_occur]
         if okres in json["okresy"]:
@@ -105,5 +105,13 @@ def to_json(df: DataFrame, value_code,
 
 
 json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec")
-with open("sample.json", "w") as outfile:
+with open("public_pocetDeti.json", "w") as outfile:
+    outfile.write(json)
+
+json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec")
+with open("public_pohlavi.json", "w") as outfile:
+    outfile.write(json)
+
+json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec")
+with open("sample_rodinnyStav.json", "w") as outfile:
     outfile.write(json)
