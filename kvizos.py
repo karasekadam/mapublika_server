@@ -44,14 +44,14 @@ def make_final_jason(json_file, kod_uzemi):
 
 def generuj_otazky_prumer(json_file, kod_uzemi):
     final_dict = {}
-    q_start = "Je váš " + ("kraj" if len(kod_uzemi) == 5 else "okres") + " nadprůměrný v hodnotě " + (json_file[9:-5])
+    q_start = "Je váš " + ("kraj" if len(kod_uzemi) == 5 else "okres") + " nadprůměrný v hodnotě " + (json_file[24:-5])
     rozdily = rozdil_prumeru(json_file, kod_uzemi)
     for option, value in rozdily.items():
         question = q_start + " a možnosti " + option + " ?"
         answer = ("Ano" if (value > 0) else "Ne")
         final_dict[question] = answer
 
-    q_start = "Je váš " + ("kraj" if len(kod_uzemi) == 5 else "okres") + " podprůměrný v hodnotě " + (json_file[9:-5])
+    q_start = "Je váš " + ("kraj" if len(kod_uzemi) == 5 else "okres") + " podprůměrný v hodnotě " + (json_file[24:-5])
     rozdily = rozdil_prumeru(json_file, kod_uzemi)
     for option, value in rozdily.items():
         question = q_start + " a možnosti " + option + " ?"
