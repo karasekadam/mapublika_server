@@ -95,7 +95,7 @@ def porodnost():
 
 
 @app.route("/otazky/<psc>/")
-def otazky_s_psc():
+def otazky_s_psc(psc):
     return None
 
 
