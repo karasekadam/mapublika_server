@@ -94,7 +94,7 @@ def to_json(df: DataFrame, value_code,
     for okres_hodnota in okresy:
         okres = okres_hodnota[0]
         kategorie = okres_hodnota[1]
-        celkovy_pocet = grouped_by_okres_celkem.loc[okres, value_occur] / 2
+        celkovy_pocet = grouped_by_okres_celkem.loc[okres, value_occur]
         koeficient = 1000 / celkovy_pocet
         pocet_v_kategorii = grouped_by_okres.loc[okres_hodnota, value_occur]
         if okres in json["okresy"]:

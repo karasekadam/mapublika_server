@@ -1,4 +1,7 @@
 import os
+from os import listdir
+from os.path import isfile, join
+
 from flask import request, Blueprint, app
 
 # from app import __name__
@@ -7,6 +10,7 @@ file_saver = Blueprint('file_saver', __name__)
 
 UPLOAD_DIRECTORY = "./users_data_sets"
 ALLOWED_EXTENSIONS = {'csv'}
+USER_SEPARATOR = "__#__"
 
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
@@ -27,7 +31,32 @@ def save_json(json_str: str, filename: str):
 
 def name_file(filename: str, token: str):
     name = filename.split(".")[0]
-    return token + "__#__" + filename + ".json"
+    return token + USER_SEPARATOR + filename + ".json"
+
+def files_of_user(token: str):
+    files = []
+    for file in listdir(UPLOAD_DIRECTORY):
+        file_split = file.split(USER_SEPARATOR)
+        if len(file_split) != 2:
+            continue
+        prefix = file_split[0]
+        if token == prefix:
+            files.append(file_split[1].split(".")[0])
+    return files
+
+
+def find_users_file(token, file_name):
+    for file in listdir(UPLOAD_DIRECTORY):
+        file_split = file.split(USER_SEPARATOR)
+        if len(file_split) != 2:
+            continue
+        prefix = file_split[0]
+        if token == prefix:
+            file_mid_name = file_split[1].split(".")[0]
+            if file_mid_name == file_name:
+                f = open(os.path.join(UPLOAD_DIRECTORY, file), "r")
+                return f.read()
+
 
 
 

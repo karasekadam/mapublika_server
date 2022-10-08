@@ -1,16 +1,15 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
-from flask_cors import CORS
 
 import csv_data_processor
 from csv_parser import read_csv, to_json
-from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file
+from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
+    files_of_user, find_users_file
 
 # import csv_data_processor
 
 app = Flask(__name__)
-CORS(app)
 
 @app.route('/hello/', methods=['GET', 'POST'])
 def welcome_hello():
@@ -53,17 +52,29 @@ def post_file(filename: str):
 
     return "", 201
 
-# @app.route("/files/<filename>", methods=["GET"])
-# def filenames_of_user():
+@app.route("/user-datasets", methods=["GET"])
+def filenames_of_user():
+    token = request.headers.get("Authorization").split(" ")[1]
+    return files_of_user(token)
+
+@app.route("/dataset/<file_name>", methods=["GET"])
+def specific_file(file_name):
+    token = request.headers.get("Authorization").split(" ")[1]
+    result = find_users_file(token, file_name)
+    if result is None:
+        return 404
+    return result
 
 
 
 
-@app.route("/porodnost")
-def porodnost():
-    return csv_data_processor.to_json()
+
+# @app.route("/porodnost")
+# def porodnost():
+#     return csv_data_processor.to_json()
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     df = pd.read_csv("uzemi_ciselniky.csv")
+    filenames_of_user()
