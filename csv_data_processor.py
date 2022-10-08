@@ -6,10 +6,14 @@ def to_json():
     # load and preprocess data
     ciselnik_df = pd.read_csv("uzemi_ciselniky.csv")
     ciselnik_df = ciselnik_df.dropna(how="all")
-    ciselnik_df.drop(ciselnik_df.columns.difference(["Kod-obec", "kod-kraj", "kod-okres"]), axis=1, inplace=True)
+    ciselnik_df.drop(
+        ciselnik_df.columns.difference(["Kod-obec", "kod-kraj", "kod-okres"]),
+        axis=1, inplace=True)
     data_df = pd.read_csv("sldb2021_pocetdeti.csv")
     data_df = data_df.dropna(how="all")
-    data_df.drop(data_df.columns.difference(["hodnota", "pocetdeti_txt", "uzemi_kod"]), axis=1, inplace=True)
+    data_df.drop(
+        data_df.columns.difference(["hodnota", "pocetdeti_txt", "uzemi_kod"]),
+        axis=1, inplace=True)
     data_df.rename(columns={"uzemi_kod": "Kod-obec"}, inplace=True)
 
     # process data
@@ -51,3 +55,13 @@ def to_json():
 
     return json
 
+
+def get_areas_by_id(location_type: str, data: DataFrame):
+    data.rename(columns={"uzemi_kod": location_type})
+    ciselnik_df = pd.read_csv("uzemi_ciselniky.csv")
+    ciselnik_df = ciselnik_df.dropna(how="all")
+    ciselnik_df.drop(
+        ciselnik_df.columns.difference(["Kod-obec", "kod-kraj", "kod-okres"]),
+        axis=1, inplace=True)
+
+    return pd.merge(data, ciselnik_df, how="inner", on=location_type)
