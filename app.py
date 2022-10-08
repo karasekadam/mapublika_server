@@ -99,7 +99,11 @@ def porodnost():
 
 @app.route("/otazky/<psc>/")
 def otazky_s_psc(psc):
+    psc = int(psc)
+    print(type(psc))
+
     kod_okres, kod_kraj = merge(psc)
+    print(kod_kraj, kod_okres)
     final_jason = run_datasets(kod_okres, kod_kraj)
     return final_jason 
 

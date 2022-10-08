@@ -165,19 +165,50 @@ with open("public_vytah.json", "w") as outfile:
     outfile.write(json_object)
 
 
+def merge1(psc_str):
+    data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
+
+    psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding="iso-8859-1")
+    print(psc)
+    print(type(psc_str))
+    print(psc_str)
+    # psc_str = int(psc_str)
+    x = psc.loc[psc["psc"] == psc_str]
+    y = psc["kodobce"].where(psc["psc"] == psc_str)
+    print(y)
+    print("x")
+    print(x)
+    print("after x")
+    kodobce = x.iloc[0]["kodobce"]
+
+    mrdka = data.loc[data["Kod-obec"] == kodobce]
+    return mrdka.iloc[0]["kod-okres"], mrdka.iloc[0]["kod-kraj"]
+
+
 def merge(psc_str):
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
 
     psc: Optional[DataFrame] = pd.read_csv("zv_cobce_psc.csv", sep=';', encoding="iso-8859-1")
-
+    # psc.replace(";", ",")
+    #print(psc["kodobce"])
+    #psc.rename(columns={"kodobce": "Kod-obec"}, inplace=True)
+    print("jedu")
+    print(psc)
+    print(type(psc_str))
+    print(psc_str)
     x = psc.loc[psc["psc"] == psc_str]
+    print(x)
+    print(x.iloc[0])
     kodobce = x.iloc[0]["kodobce"]
-
+    print(kodobce)
+    print(data["Kod-obec"] == kodobce)
+    print(data.loc[data["Kod-obec"] == kodobce])
     mrdka = data.loc[data["Kod-obec"] == kodobce]
-    print(mrdka["kod-okres"])
-    print(mrdka["kod-kraj"])
-    return mrdka["kod-okres"], mrdka["kod-kraj"]
+    print(mrdka.iloc[0])
+    return mrdka.iloc[0]["kod-okres"], mrdka.iloc[0]["kod-kraj"]
 
+
+print(merge(66491))
 """
 json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pohlavi.json", "w") as outfile:
