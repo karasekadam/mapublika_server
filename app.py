@@ -1,11 +1,8 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
-<<<<<<< HEAD
 
 from csv_parser import read_csv
-=======
->>>>>>> a836293a20a7b7198211d3d7c76aed44bbc5ccd0
 from file_saver import UPLOAD_DIRECTORY, allowed_file
 import csv_data_processor
 
