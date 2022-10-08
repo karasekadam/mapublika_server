@@ -35,10 +35,7 @@ def post_file(filename: str):
     token = request.headers.get("Authorization").split(" ")[1]
 
     args = request.form
-    print(args.get("value_code"))
 
-    if filename not in request.files:
-        return "cannot extract file from request", 400
     if "/" in filename or "__#__" in filename:
         return "no subdirectories or __#__ allowed", 400
     if not allowed_file(filename):
@@ -47,7 +44,7 @@ def post_file(filename: str):
     if os.path.exists(os.path.join(UPLOAD_DIRECTORY, new_name)):
         return "file already exists", 400
 
-    file_storage = request.files[filename]
+    file_storage = request.files["file"]
     json_str: str = str(read_csv(file_storage,
                                  args.get("value_code"),
                                  args.get("value_occurrences"),
