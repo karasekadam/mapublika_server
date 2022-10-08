@@ -48,7 +48,7 @@ def post_file(filename: str):
                              args.get("value_occurrences"),
                              args.get("location_text"),
                              args.get("localization_type"),
-                             average=args.get("average"))
+                             average=args.get("average")))
 
 
     new_name = name_file(filename, token)
