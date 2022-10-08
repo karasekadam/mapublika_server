@@ -128,7 +128,6 @@ def to_int(value):
             return int(number.group())
 
 
-
 def to_json_average(df: DataFrame, value_code, value_occur, localization, localization_type):
     for index, row in df.iterrows():
         if type(row[value_code]) != str and np.isnan(row[value_code]):
@@ -160,10 +159,11 @@ def weighted_average_of_group(values, weights, item):
     return (values * weights).groupby(item).sum() / weights.groupby(item).sum()
 
 
-json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
-with open("public_pocetDetiAverage.json", "w") as outfile:
+json = read_csv("sldb2021_vira.csv", "vira_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
+with open("public_vira.json", "w") as outfile:
     json_object = json_lib.dumps(json)
     outfile.write(json_object)
+
 
 def merge():
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
