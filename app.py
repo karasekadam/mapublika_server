@@ -93,7 +93,7 @@ def porodnost():
 
 @app.route("/otazky/<psc>/")
 def otazky_s_psc(psc):
-    return None
+    return make_final_jason("public_datasets/pub__#__pocetDeti.json", "CZ0806")
 
 
 if __name__ == '__main__':
