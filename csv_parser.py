@@ -104,3 +104,16 @@ def to_json(df: DataFrame, value_code,
                 int(pocet_v_kategorii * koeficient))
 
     return json
+
+
+json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec")
+with open("public_pocetDeti.json", "w") as outfile:
+    outfile.write(json)
+
+json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec")
+with open("public_pohlavi.json", "w") as outfile:
+    outfile.write(json)
+
+json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec")
+with open("sample_rodinnyStav.json", "w") as outfile:
+    outfile.write(json)

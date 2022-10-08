@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
+from flask_cors import CORS
 
 import csv_data_processor
 from csv_parser import read_csv, to_json
@@ -10,6 +11,8 @@ from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
 # import csv_data_processor
 
 app = Flask(__name__)
+CORS(app)
+
 
 
 @app.route('/hello/', methods=['GET', 'POST'])
@@ -72,9 +75,6 @@ def specific_datasets(file_name):
 @app.route("/dataset/public/", methods=["GET"])
 def public_datasets():
     return public_datasets_service()
-
-
-
 
 
 # @app.route("/porodnost")
