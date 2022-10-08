@@ -27,10 +27,12 @@ def read_csv(file_storage: FileStorage, value_code,
 
     df.drop(df.columns.difference(to_stay), axis=1, inplace=True)
 
+
     # df = get_areas_by_id(localization_type, df)
     # print(df)
     df = get_areas_by_id(localization_type, localization, df)
-    # print(df)
+
+
 
     # per_thousand = []
     #
@@ -46,7 +48,7 @@ def read_csv(file_storage: FileStorage, value_code,
     #                                  row[value_occur]))
     #
     # df["per_thousand"] = per_thousand
-    if average:
+    if average == "True":
         return to_json_average(df, value_code,
                                value_occur, localization,
                                localization_type)
@@ -168,8 +170,10 @@ with open("public_vytah.json", "w") as outfile:
 def merge():
     data: Optional[DataFrame] = pd.read_csv("uzemi_ciselniky.csv", sep=',')
 
+
+json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
+#print(json)
 """
-json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pohlavi.json", "w") as outfile:
     json_lib.dump(json, outfile)
 

@@ -26,10 +26,10 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def save_json(json_str: str, filename: str):
+def save_json(json_str, filename: str):
     text_file = open(os.path.join(UPLOAD_DIRECTORY, filename), "x")
 
-    text_file.write(json_str)
+    text_file.write(str(json_str))
 
     text_file.close()
 

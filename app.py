@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from flask import Flask, render_template, request
-from flask_cors import CORS
+"""from flask_cors import CORS"""
 
 import csv_data_processor
 from csv_parser import read_csv, to_json, merge
@@ -12,7 +12,7 @@ from file_saver import UPLOAD_DIRECTORY, allowed_file, save_json, name_file, \
 import csv_data_processor
 
 app = Flask(__name__)
-CORS(app)
+"""CORS(app)"""
 
 
 @app.route('/hello/', methods=['GET', 'POST'])
@@ -43,14 +43,16 @@ def post_file(filename: str):
     new_name = name_file(filename, token)
     if os.path.exists(os.path.join(UPLOAD_DIRECTORY, new_name)):
         return "file already exists", 400
-
+    print("hund")
     file_storage = request.files["file"]
-    json_str: str = str(read_csv(file_storage,
+    json_str = read_csv(file_storage,
                                  args.get("value_code"),
                                  args.get("value_occurrences"),
                                  args.get("location_text"),
                                  args.get("localization_type"),
-                                 args.get("average")))
+                                 args.get("average"))
+
+
 
     new_name = name_file(filename, token)
     save_json(json_str, new_name)
