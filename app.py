@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from flask import Flask, render_template, request
 from file_saver import UPLOAD_DIRECTORY, allowed_file
+import csv_data_processor
 
 
 app = Flask(__name__)
@@ -36,6 +37,11 @@ def post_file(filename):
     file_storage.save(os.path.join(UPLOAD_DIRECTORY, filename))
 
     return "", 201
+
+
+@app.route("/porodnost")
+def porodnost():
+    return csv_data_processor.to_json()
 
 
 if __name__ == '__main__':
