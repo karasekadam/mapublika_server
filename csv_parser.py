@@ -26,7 +26,6 @@ def read_csv(file_storage: FileStorage, value_code,
 
     df.drop(df.columns.difference(to_stay), axis=1, inplace=True)
     df = get_areas_by_id(localization_type, df)
-    #print(df)
 
     # per_thousand = []
     #
@@ -148,18 +147,13 @@ def weighted_average_of_group(values, weights, item):
     return (values * weights).groupby(item).sum() / weights.groupby(item).sum()
 
 
-# read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
-
-#json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
-#with open("public_pocetDeti.json", "w") as outfile:
-#    json_object = json_lib.dumps(json)
-#    outfile.write(json_object)
+json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec", True)
+with open("public_pocetDeti.json", "w") as outfile:
+    json_object = json_lib.dumps(json)
+    outfile.write(json_object)
 
 json = read_csv("sldb2021_vek5_pohlavi.csv", "pohlavi_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
 with open("public_pohlavi.json", "w") as outfile:
-    print("json")
-    print(json)
-    print(type(json))
     json_lib.dump(json, outfile)
 
 json = read_csv("sldb2021_stav.csv", "stav_txt", "hodnota", "uzemi_kod", "Kod-obec", False)
@@ -169,8 +163,4 @@ with open("sample_rodinnyStav.json", "w") as outfile:
 
 with open("public_pohlavi.json") as json_file:
     string_json_file = json_file.read()
-    print(string_json_file)
-    print(type(string_json_file))
     loaded = json_lib.loads(string_json_file)
-    print(loaded)
-    print(type(loaded))
