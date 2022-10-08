@@ -71,9 +71,6 @@ def specific_file(file_name):
     return result
 
 
-
-
-
 @app.route("/porodnost")
 def porodnost():
     return csv_data_processor.to_json()

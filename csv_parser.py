@@ -40,8 +40,6 @@ def read_csv(file_storage: FileStorage, value_code,
     #
     # df["per_thousand"] = per_thousand
 
-
-
     return str(to_json(df, value_code,
                        value_occur, localization,
                        localization_type))
@@ -104,3 +102,8 @@ def to_json(df: DataFrame, value_code,
             json["okresy"][okres][kategorie] = str(int(pocet_v_kategorii * koeficient))
 
     return json
+
+
+json = read_csv("sldb2021_pocetdeti.csv", "pocetdeti_txt", "hodnota", "uzemi_kod", "Kod-obec")
+with open("sample.json", "w") as outfile:
+    outfile.write(json)
