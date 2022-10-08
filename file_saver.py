@@ -11,6 +11,8 @@ file_saver = Blueprint('file_saver', __name__)
 UPLOAD_DIRECTORY = "./users_data_sets"
 ALLOWED_EXTENSIONS = {'csv'}
 USER_SEPARATOR = "__#__"
+PUB = "pub"
+PUB_DATASETS_DIRECTORY = "./public_datasets"
 
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
@@ -33,6 +35,7 @@ def name_file(filename: str, token: str):
     name = filename.split(".")[0]
     return token + USER_SEPARATOR + filename + ".json"
 
+
 def files_of_user(token: str):
     files = []
     for file in listdir(UPLOAD_DIRECTORY):
@@ -54,16 +57,14 @@ def find_users_file(token, file_name):
         if token == prefix:
             file_mid_name = file_split[1].split(".")[0]
             if file_mid_name == file_name:
-                f = open(os.path.join(UPLOAD_DIRECTORY, file), "r")
-                return f.read()
+                with open(os.path.join(UPLOAD_DIRECTORY, file), "r") as f:
+                    return f.read()
 
 
-
-
-
-
-
-
-
-
-
+def public_datasets_service():
+    datasets = []
+    for ds in listdir(PUB_DATASETS_DIRECTORY):
+        ds_split = ds.split(USER_SEPARATOR)
+        if len(ds_split) == 2:
+            datasets.append(ds_split[1].split(".")[0])
+    return datasets
